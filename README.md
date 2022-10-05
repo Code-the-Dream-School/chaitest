@@ -37,59 +37,56 @@ an error message and a 404 result code is returned.
 The application does not work at present because the routes for each of these operations
 have not been implemented. Implementing them is part of the exercise.
 
-First, implement the routes for adding a new people entry, retrieving the list of
-people entries, and retrieving a single person entry. People entries are stored in
-the people array, which starts out empty. They are not persisted. There is no
-file i/o or database access in this exercise.
-
-Next, do an npm install of the packages you will need for testing. These are to be installed
-as dev dependencies. You will need the following packages:
+As usual, you need to do an npm install of the packages in the package.json.
+This assignment uses some new packages that are used in testing, and these
+are installed as dev dependencies:
 
 mocha  
 chai  
 chai-http  
 puppeteer
 
-So you will need to do:
+First, implement the routes for adding a new people entry, retrieving the list of
+people entries, and retrieving a single person entry. People entries are stored in
+the people array, which starts out empty. They are not persisted. There is no
+file i/o or database access in this exercise.
+
+You have to add a line
 
 ```
-npm install mocha --save-dev
+module.exports =  { app, server }
 ```
+To the bottom of your app.js, because each of the test files require these values.
 
-and you will enter a similar command for each of the other three packages. You will
-have to configure puppeteer, which depends on Chrome.
-Puppeteer is a headless browser that invokes Chrome. You have to have Chrome installed for Puppeteer to work.
-You alse need to create a .env file, and you put in it a value like the following:
+You have to configure puppeteer, which depends on Chrome.
+Puppeteer is a headless browser that invokes Chrome. You have to have Chrome installed for Puppeteer to work. To configure Puppeteer,
+you need to create a .env file, and you put in it a value like the following:
 
 ```
 PUPPETEER_EXECUTABLE_PATH="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
 ```
 
 This example is for Windows -- I don't know what it is for the Mac.
-Next, edit the test line in the scripts section of your package.json file. It should say:
+Next, look at the test line in the scripts section of your package.json file.
+It says:
 
 ```
 "test": "mocha tests/*.js --exit",
 ```
 
-Now run npm test from the terminal. It should run a series of tests. The tests themselves are in
-tests/test.js and tests/puppeteer.js. Have a look at those files. You will see that most of the
-tests are not implemented -- there is just an invocation of done(). There is an example in each
-of the files, which shows how to do chai and puppeteer testing. Your next task is to complete the
-tests -- lines in the files that begin with "it" and have done() below.
+This script command invokes mocha, which is one standard framework for JavaScript tests.
+Now run npm test from the terminal. It should run a series of tests.
+The tests themselves are in
+tests/test.js and tests/puppeteer.js. Have a look at those files
+You will see that most of the
+tests are not implemented -- there is just an invocation of done() (the callback) --
+or in the case of the puppeteer tests, there are empty functions.
+There are test examples in each
+of the files, which show how to do chai and puppeteer testing. Your next task is to complete the
+tests -- functions in the files that begin with "it".
 
-Note that each of these files imports the app, and another value, server,
-which is returned by the app.listen call.
-
-So you will have to add a line
-
-```
-module.exports =  { app, server }
-```
-
-to the bottom of your app.js.
-
-The tests.js file just tests the back end, by sending REST requests to it.
+The tests.js file tests the back end, by sending REST requests to it.
+For example
 
 ```
  chai.request(app).post('/api/v1/people');
