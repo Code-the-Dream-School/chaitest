@@ -59,7 +59,7 @@ chai.should();
         console.log("at 1, resultData is ", resultData);
         resultData.should.include("A person record was added");
         const { index } = JSON.parse(resultData);
-        this.lastIndex = index;
+        this.Index = index;
       });
       it("should not create a person record without an age", async function () {
         // your code goes here.  Hint: to clear the age field, you need the line
