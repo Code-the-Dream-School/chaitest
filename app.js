@@ -1,9 +1,60 @@
 const express = require("express");
 const app = express();
+
+
+
 app.use(express.static(__dirname + "/public"));
 app.use(express.json());
 
 const people = [];
+
+// @route /api/v1/people 
+// @desc Get people 
+// @access Public 
+
+app.get("/api/v1/people", function(req, res) {
+	res.send(people);
+});
+
+// @route /api/v1/people/:id 
+// @desc Get people by index 
+// @access Public 
+app.get("/api/v1/people/:id", function(req, res)  {
+	const index = Number(req.params.id);
+	if (
+	  isNaN(index) ||
+	  !Number.isInteger(index) ||
+	  index < 0 ||
+	  index >= people.length
+	) {
+	  res.status(404).json({ message: "The person record was not found." });
+	  return;
+	}
+	res.json(people[index]);
+  });
+
+// @route /api/v1/people 
+// @desc Create person 
+// @access Public 
+app.post("/api/v1/people", function (req, res) {
+	if (!req.body.name) {
+		res.status(400).json({ error: "Please enter a name." });
+		return;
+	}
+	if (!req.body.age) {
+		res.status(400).json({ error: "Please enter an age." });
+		return;
+	}
+	const age = Number(req.body.age);
+	if (isNaN(age) || age < 0) {
+		res.status(400).json({ error: "The age must be a non-negative number." });
+		return;
+	}
+	req.body.age = age;
+	req.body.index = people.length;
+	people.push(req.body);
+	res.status(201).json({ message: "A person record was added.", index: req.body.index });
+});
 
 
 app.all("/api/v1/*", (req, res) => {
@@ -11,5 +62,7 @@ app.all("/api/v1/*", (req, res) => {
 });
 
 const server = app.listen(3000, () => {
-  console.log("listening on port 3000...");
+	console.log("listening on port 3000...");
 });
+
+module.exports = {app, server}
