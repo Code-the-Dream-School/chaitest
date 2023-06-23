@@ -63,13 +63,40 @@ chai.should();
       });
       it("should not create a person record without an age", async function () {
         // your code goes here.  Hint: to clear the age field, you need the line
-        // await page.$eval("#age", (el) => (el.value = "")); 
+        await this.nameField.type("Fred");
+        await page.$eval("#age", (el) => (el.value = ""));
+        await this.addPerson.click();
+        await sleep(200);
+        const resultData = await (
+          await this.resultHandle.getProperty("textContent")
+        ).jsonValue();
+        console.log("at 1, resultData is ", resultData);
+        resultData.should.include("Kindly provide both name and age");
+        const { index } = JSON.parse(resultData);
+        this.lastIndex = index;
       });
       it("should return the entries just created", async function () {
          // your code goes here
+        await this.listPeople.click();
+        await sleep(200);
+        const resultData = await (
+          await this.resultHandle.getProperty("textContent")
+        ).jsonValue();
+        console.log("at 1, resultData is ", resultData);
+        resultData.should.include("There are no people to show");
+        const { index } = JSON.parse(resultData);
+        this.lastIndex = index;
       });
       it("should return the last entry.", async function () {
          // your code goes here
+        await this.personIndex.click();
+        await sleep(200);
+        const resultData = await (
+          await this.resultHandle.getProperty("index")
+        ).jsonValue();
+        console.log("at 1, resultData is ", resultData);
+        const { index } = JSON.parse(resultData);
+        this.lastIndex = index;
       });
     });
   });
