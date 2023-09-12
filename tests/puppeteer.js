@@ -56,20 +56,42 @@ chai.should();
         const resultData = await (
           await this.resultHandle.getProperty("textContent")
         ).jsonValue();
-        console.log("at 1, resultData is ", resultData);
+        console.log("ResultData 1: ", resultData);
         resultData.should.include("A person record was added");
         const { index } = JSON.parse(resultData);
         this.lastIndex = index;
       });
       it("should not create a person record without an age", async function () {
-        // your code goes here.  Hint: to clear the age field, you need the line
-        // await page.$eval("#age", (el) => (el.value = "")); 
+        await this.nameField.type("Fred");
+        await page.$eval("#age", (el) => (el.value = "")); 
+        await this.addPerson.click();
+        await sleep(200);
+        const resultData = await (
+          await this.resultHandle.getProperty("textContent")
+        ).jsonValue();
+        console.log("ResultData 2:", resultData);
+        resultData.should.include("Please enter an age.") 
       });
       it("should return the entries just created", async function () {
-         // your code goes here
+        // Perform an action to trigger the retrieval of the just created entries - click a button
+        await this.listPeople.click();
+        await sleep(200);
+        // Extract and parse the result data
+        const resultData = await (
+          await this.resultHandle.getProperty("textContent")
+        ).jsonValue();
+        console.log("ResultData 3:", resultData);
+        resultData.should.include("Fred")
       });
       it("should return the last entry.", async function () {
-         // your code goes here
+        await this.personIndex.type(`${this.lastIndex}`)
+        await this.getPerson.click();
+        await sleep(200);
+        const resultData = await(
+          await this.resultHandle.getProperty("textContent")
+        ).jsonValue();
+        console.log("ResultData 4: ", resultData);
+        resultData.should.include("Fred");
       });
     });
   });
